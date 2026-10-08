@@ -1,0 +1,161 @@
+# ============================================================
+#  Multi-Objective MARL Traffic Signal Optimization
+#  Central Configuration File
+# ============================================================
+
+# ----------------------------------
+# SUMO Simulation
+# ----------------------------------
+sumo:
+  config_file: "sumo_files/config.sumocfg"
+  net_file: "sumo_files/network.net.xml"
+  route_file: "sumo_files/routes.rou.xml"
+  additional_file: "sumo_files/traffic_lights.add.xml"
+  use_gui: false            # set true to open SUMO-GUI
+  randomize: false          # deterministic runs for fair baseline/RL comparison
+  seed: 42
+  simulation_end: 3600      # seconds
+  step_length: 1            # seconds per step
+  gui_delay_ms: 120         # visual delay per step when GUI is enabled
+  gui_view_id: "View #0"   # SUMO-GUI camera view id
+  gui_zoom: 3500            # camera zoom level for easier visibility
+  gui_offset_x: 0           # camera x-offset in meters
+  gui_offset_y: 0           # camera y-offset in meters
+  gui_track_first_vehicle: true
+  gui_auto_start: true      # auto-press play when SUMO-GUI opens
+  yellow_duration: 4        # fixed yellow phase seconds
+  min_green: 10             # minimum green phase seconds
+  max_green: 60             # maximum green phase seconds
+
+# ----------------------------------
+# Intersections
+# ----------------------------------
+intersections:
+  ids: ["TL00", "TL01", "TL10", "TL11"]   # must match network TL ids
+  lanes_per_approach: 2
+  approaches: 4                            # N, S, E, W per intersection
+
+# ----------------------------------
+# State Space
+# ----------------------------------
+state:
+  queue_length: true
+  waiting_time: true
+  current_phase: true
+  arima_predictions: true
+  arima_steps_ahead: 5                     # k in the SRS
+
+# ----------------------------------
+# Action Space
+# ----------------------------------
+actions:
+  # Curriculum stage 1: remove reduce-green to simplify exploration.
+  # 0 = maintain, 1 = next phase, 2 = extend green
+  n_actions: 3
+  extend_seconds: 5
+  reduce_seconds: 5
+
+# ----------------------------------
+# Reward Weights
+# ----------------------------------
+reward:
+  # Multi-objective optimization: waiting time, CO2 emissions, and fuel use.
+  w1: 0.5    # waiting time weight
+  w2: 0.3    # CO2 emission weight
+  w3: 0.2    # fuel consumption weight
+  clip_min: -20.0
+  normalize: true
+  delta_reward_weight: 0.8
+  co2_log_scale: 100000.0
+  fuel_log_scale: 100000.0
+
+# ----------------------------------
+# ARIMA
+# ----------------------------------
+arima:
+  p: 5
+  d: 1
+  q: 0
+  min_history: 20          # minimum steps to fit ARIMA
+  steps_ahead: 5
+
+# ----------------------------------
+# MARL / RLlib Training
+# ----------------------------------
+training:
+  algorithm: "PPO"          # PPO or MADDPG
+  shared_policy: true       # all agents share one policy
+  num_episodes: 10
+  max_steps_per_episode: 300   # 30 minutes simulated
+  learning_rate: 3.0e-5
+  gamma: 0.995              # slightly longer horizon for queue effects
+  lambda_: 0.95             # GAE smoothing
+  clip_param: 0.15
+  vf_clip_param: 50.0
+  grad_clip: 0.5
+  train_batch_size: 1024
+  sgd_minibatch_size: 128
+  num_sgd_iter: 8
+  num_workers: 1
+  checkpoint_freq: 20       # episodes between checkpoints
+  checkpoint_dir: "results/checkpoints"
+  entropy_coeff: 0.0005
+
+# ----------------------------------
+# Logging & Results
+# ----------------------------------
+logging:
+  results_dir: "results"
+  training_log: "results/training_logs.csv"
+  eval_log: "results/evaluation_metrics.csv"
+  reward_plot: "results/reward_plot.png"
+  comparison_plot: "results/comparison_plot.png"
+  log_every: 1              # log every N episodes
+
+# ----------------------------------
+# Evaluation
+# ----------------------------------
+evaluation:
+  n_eval_episodes: 10
+
+# ----------------------------------
+# Faculty Demo Mode
+# ----------------------------------
+demo:
+  n_eval_episodes: 1
+  max_steps_per_episode: 240
+  gui_delay_ms: 350
+  rl_explore: true
+  force_phase_switch_interval: 20
+
+# ----------------------------------
+# Baseline Demo Mode (No Model)
+# ----------------------------------
+baseline_demo:
+  max_steps: 240
+  gui_delay_ms: 250
+
+# ----------------------------------
+# Real Dataset Integration
+# ----------------------------------
+dataset:
+  enabled: true
+  data_dir: "data/DelhiTrafficDensityDataset"
+  vehicle_profiles_file: "data/CO2 and fuel efficiency data/CO2_and_fuel_efficiency.csv"
+  # Map dataset lane indices (1-6) to TL agent IDs
+  lane_map:
+    TL00: [1, 2]
+    TL01: [3, 4]
+    TL10: [5]
+    TL11: [6]
+  road_capacity_vph: 1800   # veh/hour/lane for density→flow conversion
+  arima_warmup_steps: 60    # pre-load this many real steps into ARIMA history
+  patch_routes: true        # rewrite routes.rou.xml vehsPerHour per episode
+  cycle_episodes: true      # rotate through daily CSVs as training episodes
+
+# ----------------------------------
+# Baseline (fixed-time control)
+# ----------------------------------
+baseline:
+  green_duration: 30        # seconds
+  yellow_duration: 4

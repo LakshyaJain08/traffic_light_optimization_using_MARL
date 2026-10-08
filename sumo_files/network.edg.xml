@@ -1,0 +1,27 @@
+<?xml version="1.0" ?>
+<edges>
+    <edge id="e_00_E" from="TL00" to="TL01" numLanes="2" speed="13.89" priority="7"/>
+    <edge id="e_01_W" from="TL01" to="TL00" numLanes="2" speed="13.89" priority="7"/>
+    <edge id="e_00_N" from="TL00" to="TL10" numLanes="2" speed="13.89" priority="7"/>
+    <edge id="e_10_S" from="TL10" to="TL00" numLanes="2" speed="13.89" priority="7"/>
+    <edge id="e_01_N" from="TL01" to="TL11" numLanes="2" speed="13.89" priority="7"/>
+    <edge id="e_11_S" from="TL11" to="TL01" numLanes="2" speed="13.89" priority="7"/>
+    <edge id="e_10_E" from="TL10" to="TL11" numLanes="2" speed="13.89" priority="7"/>
+    <edge id="e_11_W" from="TL11" to="TL10" numLanes="2" speed="13.89" priority="7"/>
+    <edge id="e_bot0_in" from="P_bot0" to="TL00" numLanes="2" speed="13.89" priority="7"/>
+    <edge id="e_bot0_out" from="TL00" to="P_bot0" numLanes="2" speed="13.89" priority="7"/>
+    <edge id="e_top0_in" from="P_top0" to="TL10" numLanes="2" speed="13.89" priority="7"/>
+    <edge id="e_top0_out" from="TL10" to="P_top0" numLanes="2" speed="13.89" priority="7"/>
+    <edge id="e_bot1_in" from="P_bot1" to="TL01" numLanes="2" speed="13.89" priority="7"/>
+    <edge id="e_bot1_out" from="TL01" to="P_bot1" numLanes="2" speed="13.89" priority="7"/>
+    <edge id="e_top1_in" from="P_top1" to="TL11" numLanes="2" speed="13.89" priority="7"/>
+    <edge id="e_top1_out" from="TL11" to="P_top1" numLanes="2" speed="13.89" priority="7"/>
+    <edge id="e_lft0_in" from="P_lft0" to="TL00" numLanes="2" speed="13.89" priority="7"/>
+    <edge id="e_lft0_out" from="TL00" to="P_lft0" numLanes="2" speed="13.89" priority="7"/>
+    <edge id="e_rgt0_in" from="P_rgt0" to="TL01" numLanes="2" speed="13.89" priority="7"/>
+    <edge id="e_rgt0_out" from="TL01" to="P_rgt0" numLanes="2" speed="13.89" priority="7"/>
+    <edge id="e_lft1_in" from="P_lft1" to="TL10" numLanes="2" speed="13.89" priority="7"/>
+    <edge id="e_lft1_out" from="TL10" to="P_lft1" numLanes="2" speed="13.89" priority="7"/>
+    <edge id="e_rgt1_in" from="P_rgt1" to="TL11" numLanes="2" speed="13.89" priority="7"/>
+    <edge id="e_rgt1_out" from="TL11" to="P_rgt1" numLanes="2" speed="13.89" priority="7"/>
+</edges>

@@ -1,0 +1,29 @@
+# ============================================================
+#  Multi-Objective MARL Traffic Signal Optimization
+#  Python Dependencies  (Python 3.10+)
+# ============================================================
+
+# Core scientific stack
+numpy>=1.24
+pandas>=2.0
+scipy>=1.10
+matplotlib>=3.7
+seaborn>=0.12
+
+# SUMO Python bindings (traci & sumolib ship with SUMO installation)
+# Install SUMO >= 1.15 from https://sumo.dlr.de/docs/Downloads.php
+# traci is available after adding SUMO's tools folder to PYTHONPATH
+
+# Reinforcement Learning
+ray[rllib]>=2.7
+gymnasium>=0.28          # Gym-compatible environments
+
+# Time-series prediction
+statsmodels>=0.14        # ARIMA
+
+# Configuration
+pyyaml>=6.0
+
+# Utilities
+tqdm>=4.65
+colorama>=0.4

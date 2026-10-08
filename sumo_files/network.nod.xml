@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+<nodes>
+    <node id="TL00" x="300" y="300" type="traffic_light"/>
+    <node id="TL01" x="600" y="300" type="traffic_light"/>
+    <node id="TL10" x="300" y="600" type="traffic_light"/>
+    <node id="TL11" x="600" y="600" type="traffic_light"/>
+    <node id="P_bot0" x="300" y="0" type="dead_end"/>
+    <node id="P_top0" x="300" y="900" type="dead_end"/>
+    <node id="P_bot1" x="600" y="0" type="dead_end"/>
+    <node id="P_top1" x="600" y="900" type="dead_end"/>
+    <node id="P_lft0" x="0" y="300" type="dead_end"/>
+    <node id="P_rgt0" x="900" y="300" type="dead_end"/>
+    <node id="P_lft1" x="0" y="600" type="dead_end"/>
+    <node id="P_rgt1" x="900" y="600" type="dead_end"/>
+</nodes>

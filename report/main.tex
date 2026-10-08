@@ -1,0 +1,194 @@
+\documentclass[conference]{IEEEtran}
+
+\usepackage{cite}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{url}
+\usepackage{xcolor}
+
+\title{Multi-Objective MARL Traffic Signal Optimization\
+with ARIMA-Aided State Forecasting in SUMO}
+
+\author{\IEEEauthorblockN{Student Name}\
+\IEEEauthorblockA{Department of Computer Science\\
+College Name\\
+Email: student@example.com}}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This project implements a multi-agent reinforcement learning (MARL) system for adaptive urban traffic signal control. Four intersections are controlled in a SUMO network using PPO with centralized training and decentralized execution. The state includes queue lengths, waiting times, current phase encoding, and ARIMA-based inflow forecasts. The reward captures a multi-objective traffic optimization problem targeting waiting time, CO$_2$ emissions, and fuel consumption, with configurable scalarization and improvement shaping. Training is calibrated with real Delhi traffic density traces by patching route demand per episode. Final evaluation against a fixed-time baseline over 10 episodes shows strong gains: waiting time per step improved by 92.95\%, CO$_2$ per step by 22.29\%, and fuel per step by 22.29\%. The report documents architecture, algorithms, implementation details, experimental protocol, results, and deployment considerations.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Traffic signal control, MARL, PPO, SUMO, ARIMA, multi-objective optimization, intelligent transportation systems.
+\end{IEEEkeywords}
+
+\section{Introduction}
+Urban intersections are highly dynamic, and fixed-time control degrades under non-stationary demand. This project addresses the problem through a data-calibrated MARL controller in simulation, using one agent per intersection and a shared policy trained with PPO.
+
+\section{Problem Definition}
+Let the traffic signal network have agents $i \in \{1,\dots,N\}$ (here $N=4$). At each time $t$, each agent observes local traffic state $s_i^t$ and selects action $a_i^t \in \mathcal{A}$. The environment evolves in SUMO and yields global traffic metrics:
+\begin{itemize}
+    \item $W_t$: total waiting time,
+    \item $C_t$: total CO$_2$ emission,
+    \item $F_t$: total fuel consumption.
+\end{itemize}
+The scalarized objective is:
+\begin{equation}
+R_t = -\left(w_1 W_t + w_2 C_t + w_3 F_t\right) + \lambda_\Delta \Delta_t,
+\end{equation}
+where $\Delta_t$ is a bounded step-to-step improvement shaping term.
+
+\section{System Architecture}
+\subsection{Core Modules}
+\begin{itemize}
+    \item \texttt{main.py}: mode dispatcher (generate/train/eval/full),
+    \item \texttt{src/sumo\_env.py}: Gym-style multi-agent SUMO wrapper,
+    \item \texttt{src/marl\_trainer.py}: PPO setup and training loop,
+    \item \texttt{src/reward.py}: multi-objective reward + shaping,
+    \item \texttt{src/arima\_predictor.py}: ARIMA inflow forecasts,
+    \item \texttt{src/dataset\_loader.py}: Delhi CSV loading and demand patching,
+    \item \texttt{src/baseline.py}: fixed-time controller,
+    \item \texttt{src/evaluation.py}: aligned baseline-vs-RL evaluation.
+\end{itemize}
+
+\subsection{Execution Pipeline}
+\begin{enumerate}
+    \item Load config and instantiate environment/trainer.
+    \item Select dataset episode and patch \texttt{routes.rou.xml} demand.
+    \item Pre-warm ARIMA predictors.
+    \item Run PPO rollouts in SUMO via TraCI.
+    \item Compute reward and optimize shared policy.
+    \item Save checkpoints/logs, then evaluate against baseline.
+\end{enumerate}
+
+\section{Data and Calibration}
+The project uses daily CSV files from \texttt{data/DelhiTrafficDensityDataset}. Key fields are \texttt{QueueDensity1..6} and \texttt{StopDensity1..6}. Lane channels are mapped to 4 intersections:
+\begin{itemize}
+    \item TL00 $\leftarrow$ lanes 1,2
+    \item TL01 $\leftarrow$ lanes 3,4
+    \item TL10 $\leftarrow$ lane 5
+    \item TL11 $\leftarrow$ lane 6
+\end{itemize}
+Per-episode route flow is patched from density windows so training demand reflects real traffic patterns.
+
+\section{State, Action, and Reward}
+\subsection{State}
+Per-agent observation concatenates:
+\begin{itemize}
+    \item queue length per controlled lane,
+    \item waiting time per controlled lane,
+    \item one-hot current phase,
+    \item ARIMA $k$-step forecast ($k=5$).
+\end{itemize}
+
+\subsection{Action Space}
+Curriculum stage uses 3 actions:
+\begin{itemize}
+    \item 0: maintain,
+    \item 1: switch to next phase,
+    \item 2: extend green.
+\end{itemize}
+Signal safety constraints enforce yellow transitions and min/max green.
+
+\subsection{Reward Configuration (Final Run)}
+\begin{itemize}
+    \item waiting-focused curriculum: $w_1=1.0$, $w_2=0.0$, $w_3=0.0$,
+    \item normalization enabled,
+    \item delta shaping weight $\lambda_\Delta=0.8$,
+    \item reward clipping lower bound: $-20.0$.
+\end{itemize}
+
+\section{Training Setup}
+\subsection{Simulation Settings}
+\begin{itemize}
+    \item deterministic seed: 42,
+    \item step length: 1 s,
+    \item min green: 10 s,
+    \item max green: 60 s,
+    \item yellow: 4 s,
+    \item max steps/episode: 300.
+\end{itemize}
+
+\subsection{PPO Settings (Final Config)}
+\begin{itemize}
+    \item episodes: 150,
+    \item learning rate: $3\times10^{-5}$,
+    \item $\gamma=0.995$, GAE $\lambda=0.95$,
+    \item clip: 0.15,
+    \item value clip: 50.0,
+    \item grad clip: 0.5,
+    \item train batch: 1024,
+    \item minibatch: 128,
+    \item SGD epochs: 8,
+    \item entropy coeff: 0.0005,
+    \item shared policy across all agents.
+\end{itemize}
+
+\section{Evaluation Protocol}
+Evaluation uses 10 episodes with aligned episode indices and deterministic seeds for fair baseline-vs-RL comparison. Baseline uses fixed-time timing (30 s green, 4 s yellow). RL uses the final checkpoint in \texttt{results/checkpoints}.
+
+\section{Results}
+\subsection{Aggregate Comparison}
+From \texttt{results/evaluation\_metrics.csv}:
+\begin{table}[!t]
+\centering
+\caption{Final Baseline vs MARL Results}
+\label{tab:results}
+\begin{tabular}{lccc}
+\toprule
+Metric & Baseline & MARL & Improvement \\
+\midrule
+Waiting/step & 189.4433 & 13.3467 & +92.95\% \\
+CO$_2$/step & 126682.7387 & 98446.4265 & +22.29\% \\
+Fuel/step & 41069.0521 & 31915.0877 & +22.29\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Interpretation}
+The trained policy substantially outperforms fixed-time control on all target metrics. The strongest gain is queue-delay reduction, while emission and fuel gains indicate smoother traffic dynamics with fewer stop-and-go events.
+
+\section{Ablation and Tuning Notes}
+Observed key contributors to improvement were:
+\begin{itemize}
+    \item evaluation alignment (same episodes/seeds),
+    \item simplified early action space,
+    \item waiting-first curriculum before reintroducing full objectives,
+    \item conservative PPO updates for stability,
+    \item deterministic SUMO seed for reproducibility.
+\end{itemize}
+
+\section{Limitations}
+\begin{itemize}
+    \item Results are simulation-based; field deployment needs sensor integration and safety-certified control layers.
+    \item Current best run emphasizes waiting-first objective; full multi-objective weight sweep can further strengthen claims.
+    \item Directly using RL in production requires fallback and rule-based safety supervision.
+\end{itemize}
+
+\section{Real-World Deployment Path}
+A practical control stack is:
+\begin{center}
+Sensors $\rightarrow$ Feature Builder $\rightarrow$ MARL Inference $\rightarrow$ Safety Supervisor $\rightarrow$ Signal Controller
+\end{center}
+The RL policy should output phase requests; a safety layer must enforce legal timings, pedestrian phases, emergency priority, and fail-safe fallback.
+
+\section{Conclusion}
+This project demonstrates an end-to-end, data-calibrated MARL traffic signal system with ARIMA-enhanced state and PPO control. The final trained policy beats fixed-time baseline by a large margin across operational and environmental metrics. The framework is reproducible, modular, and suitable for publication-oriented extension with broader ablations and multi-seed statistical reporting.
+
+\section*{Reproducibility Commands}
+\begin{itemize}
+    \item Generate files: \texttt{python main.py --mode generate}
+    \item Train: \texttt{python main.py --mode train}
+    \item Evaluate: \texttt{python main.py --mode eval}
+    \item Full pipeline: \texttt{python main.py --mode full}
+\end{itemize}
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}

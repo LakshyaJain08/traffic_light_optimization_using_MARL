@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 2026-04-06T22:38:49.923696+05:30 by Eclipse SUMO GUI 1.26.0
+<sumoConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
+
+    <input>
+        <net-file value="C:\Users\khara\Desktop\COLLEGE\SEM 6\CPSD\project\sumo_files\network.net.xml"/>
+        <route-files value="C:\Users\khara\Desktop\COLLEGE\SEM 6\CPSD\project\sumo_files\routes.rou.xml"/>
+        <additional-files value="C:\Users\khara\Desktop\COLLEGE\SEM 6\CPSD\project\sumo_files\traffic_lights.add.xml"/>
+    </input>
+
+    <time>
+        <begin value="0"/>
+        <end value="3600"/>
+        <step-length value="1"/>
+    </time>
+
+    <report>
+        <no-warnings value="true"/>
+        <no-step-log value="true"/>
+    </report>
+
+    <traci_server>
+        <remote-port value="53189"/>
+    </traci_server>
+
+    <random_number>
+        <seed value="42"/>
+    </random_number>
+
+    <gui_only>
+        <start value="true"/>
+    </gui_only>
+
+</sumoConfiguration>
+-->
+
+<detector xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/det_e1_file.xsd">
+    <interval begin="0.00" end="60.00" id="det_lft0" nVehContrib="2" flow="120.00" occupancy="1.90" speed="9.74" harmonicMeanSpeed="8.78" length="5.00" nVehEntered="2"/>
+    <interval begin="60.00" end="120.00" id="det_lft0" nVehContrib="3" flow="180.00" occupancy="2.36" speed="11.22" harmonicMeanSpeed="10.58" length="5.00" nVehEntered="3"/>
+    <interval begin="120.00" end="180.00" id="det_lft0" nVehContrib="3" flow="180.00" occupancy="29.28" speed="9.90" harmonicMeanSpeed="0.85" length="5.00" nVehEntered="3"/>
+    <interval begin="180.00" end="240.00" id="det_lft0" nVehContrib="2" flow="120.00" occupancy="25.27" speed="3.83" harmonicMeanSpeed="0.66" length="5.00" nVehEntered="2"/>
+</detector>

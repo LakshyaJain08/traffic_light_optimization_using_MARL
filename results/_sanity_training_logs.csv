@@ -1,0 +1,2 @@
+episode,mean_reward,mean_waiting_time,mean_co2,mean_fuel,training_iteration,episodes_this_iter,env_steps_this_iter
+1,-7998.6610372760815,0.0,27273.219889570773,8841.584557036973,1,6,64

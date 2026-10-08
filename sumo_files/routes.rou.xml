@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='utf-8'?>
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
+    <vTypeDistribution id="vehicle_mix">
+        <vType id="car_petrol_small_1000cc_0" probability="0.05263157894736842" />
+        <vType id="car_petrol_mid_1200cc_1" probability="0.05263157894736842" />
+        <vType id="car_petrol_large_1500cc_2" probability="0.05263157894736842" />
+        <vType id="car_diesel_small_1300cc_3" probability="0.05263157894736842" />
+        <vType id="car_diesel_mid_1500cc_4" probability="0.05263157894736842" />
+        <vType id="car_diesel_large_1800cc_5" probability="0.05263157894736842" />
+        <vType id="car_cng_mid_6" probability="0.05263157894736842" />
+        <vType id="car_electric_na_7" probability="0.05263157894736842" />
+        <vType id="2w_petrol_100cc_8" probability="0.05263157894736842" />
+        <vType id="2w_petrol_125cc_9" probability="0.05263157894736842" />
+        <vType id="2w_petrol_150cc_10" probability="0.05263157894736842" />
+        <vType id="bus_diesel_standard_11" probability="0.05263157894736842" />
+        <vType id="bus_cng_standard_12" probability="0.05263157894736842" />
+        <vType id="truck_diesel_light_13" probability="0.05263157894736842" />
+        <vType id="truck_diesel_heavy_14" probability="0.05263157894736842" />
+        <vType id="suv_petrol_2000cc_15" probability="0.05263157894736842" />
+        <vType id="suv_diesel_2000cc_16" probability="0.05263157894736842" />
+        <vType id="auto_rickshaw_cng_standard_17" probability="0.05263157894736842" />
+        <vType id="auto_rickshaw_petrol_standard_18" probability="0.05263157894736842" />
+    </vTypeDistribution>
+    <route id="route_bot0" edges="e_bot0_in e_00_N e_top0_out" />
+    <route id="route_top0" edges="e_top0_in e_10_S e_bot0_out" />
+    <route id="route_bot1" edges="e_bot1_in e_01_N e_top1_out" />
+    <route id="route_top1" edges="e_top1_in e_11_S e_bot1_out" />
+    <route id="route_lft0" edges="e_lft0_in e_00_E e_rgt0_out" />
+    <route id="route_rgt0" edges="e_rgt0_in e_01_W e_lft0_out" />
+    <route id="route_lft1" edges="e_lft1_in e_10_E e_rgt1_out" />
+    <route id="route_rgt1" edges="e_rgt1_in e_11_W e_lft1_out" />
+    <flow id="flow_0" type="vehicle_mix" route="route_bot0" begin="0" end="3600" vehsPerHour="269" departLane="best" departSpeed="random" />
+    <flow id="flow_1" type="vehicle_mix" route="route_top0" begin="0" end="3600" vehsPerHour="269" departLane="best" departSpeed="random" />
+    <flow id="flow_2" type="vehicle_mix" route="route_bot1" begin="0" end="3600" vehsPerHour="269" departLane="best" departSpeed="random" />
+    <flow id="flow_3" type="vehicle_mix" route="route_top1" begin="0" end="3600" vehsPerHour="269" departLane="best" departSpeed="random" />
+    <flow id="flow_4" type="vehicle_mix" route="route_lft0" begin="0" end="3600" vehsPerHour="269" departLane="best" departSpeed="random" />
+    <flow id="flow_5" type="vehicle_mix" route="route_rgt0" begin="0" end="3600" vehsPerHour="269" departLane="best" departSpeed="random" />
+    <flow id="flow_6" type="vehicle_mix" route="route_lft1" begin="0" end="3600" vehsPerHour="269" departLane="best" departSpeed="random" />
+    <flow id="flow_7" type="vehicle_mix" route="route_rgt1" begin="0" end="3600" vehsPerHour="269" departLane="best" departSpeed="random" />
+</routes>

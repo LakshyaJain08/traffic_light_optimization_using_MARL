@@ -1,0 +1,7 @@
+metric,baseline,rl_agent,pct_reduction
+waiting_time_per_step,0.0,0.0,0.0
+co2_per_step,23925.800285844092,23925.800285844085,3.041050885344182e-14
+fuel_per_step,7756.421456734499,7756.421456734499,0.0
+
+episode,baseline_wait,rl_wait,baseline_co2,rl_co2,baseline_fuel,rl_fuel
+1,0.0,0.0,23925.800285844092,23925.800285844085,7756.421456734499,7756.421456734499
